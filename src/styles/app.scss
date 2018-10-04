@@ -26,11 +26,16 @@ body{
   margin-bottom: 0px;
 }
 
+.button-list {
+  margin: 18px 0px;
+}
+
 a {
   cursor: pointer;
   text-decoration: none;
   color: #fc9272;
   outline: none;
+  padding: 0px 20px;
 }
 
 #source {
