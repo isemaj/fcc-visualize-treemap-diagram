@@ -22,10 +22,11 @@ const DATASETS = {
 }
 
 const defaultSet = 'videogames';
-const svg = d3.select('svg')
+const svg = d3.select('svg');
+const legend = d3.select('#legend');
 const svg_width = +svg.attr('width')
 const svg_height = +svg.attr('height')
-const colorScheme = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabebe', '#469990', '#e6beff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9']
+const colorScheme = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#42d4f4', '#f032e6', '#bfef45', '#fabebe', '#469990', '#e6beff', '#9A6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '##FF6666', '#a9a9a9']
 const fader = (color) => d3.interpolateRgb(color, '#fff')(0.3)
 const color = d3.scaleOrdinal(colorScheme.map(fader));
 
@@ -54,11 +55,15 @@ const createTile = (file_path) => {
     const treeNodes = svg.selectAll('g')
       .data(rootNode.leaves())
       .enter()
-      .append('g').attr('class', 'node')
+      .append('g')
+      .attr('class', 'node')
       .attr('transform', (d) => `translate(${d.x0}, ${d.y0})`)
 
     treeNodes.append('rect')
       .attr('fill', (d) => color(d.data.category))
+      .transition()
+      .duration(1000)
+      .attr('class', 'legend-item')
       .attr('width', (d) => d.x1 - d.x0)
       .attr('height', (d) => d.y1 - d.y0) 
       .style('stroke', '#2f2f2f')
@@ -68,11 +73,44 @@ const createTile = (file_path) => {
       .data((d) => d.data.name.split(/(?=[A-Z][^A-Z])/g))
       .enter()
       .append('tspan')
+      .transition()
+      .delay(400)
+      .duration(1000)
       .attr('x', 4)
       .attr('y', (d,i) => 13 + i * 10)
       .text((d) => d)
-      .style('fill', 'white')
+      .style('fill', 'rgba(0,0,0,0.7)')
 
+    let categories = rootNode.leaves().map((d) => d.data.category).filter((value, index, self) => self.indexOf(value) === index)
+
+    let lWidth = +legend.attr('width');
+    let legendHSpacer = 150;
+    let legendVSpacer = 20;
+    let elemsPerRow = Math.floor(lWidth/legendHSpacer)
+    let tileSize = 15;
+
+    legend.selectAll('g')
+      .remove()
+
+    let legendData = legend
+      .append('g')
+      .attr('transform', 'translate(60, 0)')
+      .selectAll('g')
+      .data(categories)
+      .enter()
+      .append('g')
+      .attr('transform', (d,i) => `translate(${(i%elemsPerRow) * legendHSpacer}, ${(Math.floor(i / elemsPerRow)) * tileSize + (legendVSpacer * Math.floor( i / elemsPerRow))})`)
+
+    legendData.append('rect')
+      .attr('class', 'legend-item')
+      .attr('width', tileSize)
+      .attr('height', tileSize)
+      .attr('fill', (d) => color(d))
+
+    legendData.append('text')
+      .attr('x', tileSize + 4)
+      .attr('y', tileSize - 4)
+      .text((d) => d)
   })
 }
 
