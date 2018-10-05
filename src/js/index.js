@@ -30,6 +30,10 @@ const colorScheme = ['#e6194B', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#91
 const fader = (color) => d3.interpolateRgb(color, '#fff')(0.3)
 const color = d3.scaleOrdinal(colorScheme.map(fader));
 
+const tooltip = d3.select('body')
+  .append('div')
+  .attr('id', 'tooltip')
+
 d3.selectAll('a')
   .on('click', function() {
     setData(d3.select(this).attr('id'))
@@ -58,6 +62,22 @@ const createTile = (file_path) => {
       .append('g')
       .attr('class', 'node')
       .attr('transform', (d) => `translate(${d.x0}, ${d.y0})`)
+      .on('mouseover', (d, i) => {
+        tooltip.html(`
+          <strong>Name:</strong> ${d.data.name} 
+          <br> 
+          <strong>Category:</strong> ${d.data.category}
+          <br> 
+          <strong>Value:</strong> ${d.data.value}`)
+        .transition()
+        .duration(700)
+        .style('left', d3.event.pageX)
+        .style('top', d3.event.pageY)
+        .style('opacity', 0.9)
+      })
+      .on('mouseout', () => {
+        tooltip.style('opacity', 0)
+      })
 
     treeNodes.append('rect')
       .attr('fill', (d) => color(d.data.category))
@@ -109,7 +129,7 @@ const createTile = (file_path) => {
 
     legendData.append('text')
       .attr('x', tileSize + 4)
-      .attr('y', tileSize - 4)
+      .attr('y', tileSize - 8)
       .text((d) => d)
   })
 }
