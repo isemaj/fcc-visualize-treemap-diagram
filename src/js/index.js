@@ -48,9 +48,10 @@ const createTile = (file_path) => {
 
     treemapLayout(rootNode);
 
-    const treeNodes = svg.selectAll('g')
-      .exit()
+    svg.selectAll('g')
       .remove()
+
+    const treeNodes = svg.selectAll('g')
       .data(rootNode.leaves())
       .enter()
       .append('g').attr('class', 'node')
@@ -70,7 +71,7 @@ const createTile = (file_path) => {
       .attr('x', 4)
       .attr('y', (d,i) => 13 + i * 10)
       .text((d) => d)
-      .style('fill', 'black')
+      .style('fill', 'white')
 
   })
 }
