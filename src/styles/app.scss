@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Modak');
 
 body, html {
   margin: 0;
@@ -17,7 +17,7 @@ body{
 #title,
 #description {
   color: white;
-  font-family: 'Roboto', 'sans-serif'
+  font-family: 'Modak', 'cursive'
 }
 
 #title {
@@ -40,7 +40,7 @@ a {
 
 #source {
   margin: 20px 0;
-  font-family: 'Roboto', 'sans-serif';
+  font-family: 'Modak', 'cursive';
   color: white;
 }
 
@@ -56,3 +56,6 @@ i {
   color: white;
 }
 
+i:hover {
+  opacity: 0.8
+}
